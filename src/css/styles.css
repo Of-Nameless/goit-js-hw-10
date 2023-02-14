@@ -20,7 +20,5 @@ body {
 }
 
 .country-list {
-  display: block;
-  align-items: center;
   list-style: none;
 }
