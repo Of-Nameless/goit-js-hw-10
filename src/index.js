@@ -1,59 +1,66 @@
 import './css/styles.css';
 import debounce from 'lodash.debounce';
-import {Notify} from 'notiflix';
-import fetchCountries from './fetchCountries';
+import SearchCountry from './fetchCountries';
+import { Notify } from 'notiflix';
 
+const searchInput = document.getElementById('search-box');
+const countryList = document.querySelector('.country-list');
+const container = document.querySelector('.country-info');
+const searchCountry = new SearchCountry();
+console.log(searchCountry);
 const DEBOUNCE_DELAY = 300;
-let searchValue = '';
-const refs = {
-    input: document.getElementById('search-box'),
-    list: document.querySelector('.country-list'),
-    info: document.querySelector('.country-info')
-};
 
-refs.input.addEventListener('input', debounce(onSearchCountry, DEBOUNCE_DELAY));
+searchInput.addEventListener('input', debounce(onSearchInput, DEBOUNCE_DELAY));
 
-function onSearchCountry(e) {
-    searchValue = e.target.value.trim();
-    // console.log(searchValue);
-    fetchCountries(searchValue)
-        .then(country => {
-            if (country.length > 10) {
-            Notify.warning('Too many matches found. Please enter a more specific name')
-            }
-            if (country.length >= 2 && country.length <= 10) {
-                return createListMarkup(country);
-                
-            }
-            if(country.length === 1) {
-               return createCardMarkup(country);
-            }
-    })
+function onSearchInput(e) {
+  resetCountryList();
+  searchCountry.country = e.target.value.trim();
+  if (!searchCountry.country) {
+    return;
+  }
+  searchCountry.fetchCountries().then(data => createMarkup(data));
 }
 
-function createListMarkup(country) {
-    const markup = country.map(arr => {
-        return `<li>
-        <p class="country-name">
-          <span class="country-flag">
-            <img src="${arr.flags.svg}" width="30px" height="20px">
-          </span> <b>${arr.official}</b>
-        </p>
-      </li>`
-    }).join('');
-    refs.list.insertAdjacentHTML('beforeend', markup)
-};
+function createMarkup(data) {
+  if (data.length > 10) {
+      Notify.info('Too many matches found. Please enter a more specific name.');
+      }
+  if (data.length === 1) {
+    createCountryCard();
+  }
+  if (data.length >= 2 && data.length <= 10) {
+    createCountryList();
+  }
 
-function createCardMarkup(country) {
-    const markup = country.map(arr => {
-       return `<p class="country-name">
-          <span class="country-flag">
-            <img src="${arr.flags.svg}" width="30px" height="20px">
-          </span> <b>${arr.official}</b>
-        </p>
-        <p><b>Capital:</b>${arr.capital}</p>
-      <p><b>Population:</b>${arr.population}</p>
-      <p><b>Languages:</b>${Object.values(arr.languages)}</p>`
-    }).join('');
-    refs.info.insertAdjacentHTML('beforeend', markup)
+  function createCountryList() {
+  const markup = data.map(
+        ({ name, flags }) =>
+          `<li>
+      <p><image src="${flags.svg}" alt="${name}" height="20" width="30"/>&nbsp 
+      <span><b>${name.official}</span>
+      </p>
+    </li>`
+      )
+    .join('');
+
+  countryList.innerHTML = markup;
+  }
+
+  function createCountryCard() {
+    const markup = data
+      .map(
+        ({ name, capital, population, flags, languages }) =>
+      `<h2><image src="${flags.svg}" alt="${name}" height="30" width="40"/>&nbsp
+      <BIG>${name.official}</BIG></h2>
+      <h3><span>Capital: </span> ${capital} </h3>
+      <p><span><b>Population: </b></span> ${population}</p>
+      <p><span><b>Languages: </b></span>${Object.values(languages).join(', ')}</p>`)
+      .join('');
+    container.innerHTML = markup;
+  }
+}
+
+function resetCountryList() {
+  countryList.innerHTML = '';
+  container.innerHTML = '';
 };
