@@ -15,10 +15,9 @@ searchInput.addEventListener('input', debounce(onSearchInput, DEBOUNCE_DELAY));
 function onSearchInput(e) {
   resetCountryList();
   searchCountry.country = e.target.value.trim();
-  if (!searchCountry.country) {
-    return;
-  }
-  searchCountry.fetchCountries().then(data => createMarkup(data));
+  if (searchCountry.country) {
+    searchCountry.fetchCountries().then(data => createMarkup(data));
+  } 
 }
 
 function createMarkup(data) {
