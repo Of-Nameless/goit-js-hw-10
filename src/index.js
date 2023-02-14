@@ -35,10 +35,10 @@ function createMarkup(data) {
   const markup = data.map(
         ({ name, flags }) =>
           `<li>
-      <p><image src="${flags.svg}" alt="${name}" height="20" width="30"/> 
-      <span><b>${name.official}</span>
-      </p>
-    </li>`
+            <p><image src="${flags.svg}" alt="${name}" height="30" width="40"/> 
+            <span><b>${name.official}</span>
+            </p>
+          </li>`
       )
     .join('');
 
@@ -49,11 +49,12 @@ function createMarkup(data) {
     const markup = data
       .map(
         ({ name, capital, population, flags, languages }) =>
-      `<h2><image src="${flags.svg}" alt="${name}" height="30" width="40"/>
-      <BIG>${name.official}</BIG></h2>
-      <h3><span>Capital: </span> ${capital} </h3>
-      <p><span><b>Population: </b></span> ${population}</p>
-      <p><span><b>Languages: </b></span>${Object.values(languages).join(', ')}</p>`)
+          `<div class='country-item'>
+            <h2><image src="${flags.svg}" alt="${name}" height="40" width="50"/><b> ${name.official}</b></h2>
+            <h3><span>Capital: </span> ${capital} </h3>
+            <p><span><b>Population: </b></span> ${population}</p>
+            <p><span><b>Languages: </b></span>${Object.values(languages).join(', ')}</p>
+          </div>`)
       .join('');
     container.innerHTML = markup;
   }
