@@ -35,7 +35,7 @@ function createMarkup(data) {
   const markup = data.map(
         ({ name, flags }) =>
           `<li>
-      <p><image src="${flags.svg}" alt="${name}" height="20" width="30"/>&nbsp 
+      <p><image src="${flags.svg}" alt="${name}" height="20" width="30"/> 
       <span><b>${name.official}</span>
       </p>
     </li>`
@@ -49,7 +49,7 @@ function createMarkup(data) {
     const markup = data
       .map(
         ({ name, capital, population, flags, languages }) =>
-      `<h2><image src="${flags.svg}" alt="${name}" height="30" width="40"/>&nbsp
+      `<h2><image src="${flags.svg}" alt="${name}" height="30" width="40"/>
       <BIG>${name.official}</BIG></h2>
       <h3><span>Capital: </span> ${capital} </h3>
       <p><span><b>Population: </b></span> ${population}</p>
